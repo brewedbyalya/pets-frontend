@@ -16,13 +16,17 @@ const PetForm = (props) => {
 
     const handleSubmit = (evt) => {
         evt.preventDefault()
-        console.log('the form was submitted!')
-        props.handleAddPet(formData)
-        setFormData(initialState)
+        if (props.selected)
+        {
+            props.handleUpdatePet(formData, props.selected._id)
+        }
+        else {
+        props.handleAddPet(formData) }
+        setFormData(initialState) 
     }
 
     return (
-        <>
+        <div className='form-container'>
             <h1>Pet Form</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="name">Name:</label>
@@ -36,9 +40,9 @@ const PetForm = (props) => {
                 <label htmlFor="breed">Breed:</label>
                 <input type="text" name="breed" value={formData.breed} id="breed" onChange={handleChange} />
 
-                <button type="submit">Add New Pet</button>
+                <button type="submit">{props.selected ? 'Update Pet' : 'Add New Pet'}</button>
             </form>
-        </>
+        </div>
     )
 }
 

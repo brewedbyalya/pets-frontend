@@ -4,6 +4,8 @@ import PetList from './components/PetList/PetList';
 import PetDetail from './components/PetDetail/PetDetail';
 import PetForm from './components/PetForm/PetForm';
 
+import './App.css';
+
 const App = () => {
   const [pets, setPets] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -26,19 +28,51 @@ const App = () => {
   }
 
 const handleAddPet = async (formData) => {
-  await petService.create(formData)
+  const newPet = await petService.create(formData)
+  setPets([newPet, ...pets])
 }
 
   const handleFormView = () => {
     setIsFormOpen(!isFormOpen);
   };
 
+  const handleUpdatePet = async (formData, petId) => {
+    try {
+      const updatedPet = await petService.update(formData, petId);
+
+    const updatedPetList = pets.map((pet) => (
+      pet._id !== updatedPet._id ? pet : updatedPet
+    ));
+    setPets(updatedPetList);
+    setSelected(updatedPet);
+    setIsFormOpen(false);
+    }
+    catch(err) {console.log(err)}
+  }
+
+  
+  const handleDeletePet = async (petId) => {
+    try {
+      const deletedPet = await petService.deletePet(petId);
+
+      if (deletedPet.err) {
+        throw new Error(deletedPet.err);
+      }
+
+      setPets(pets.filter((pet) => pet._id !== deletedPet._id));
+      setSelected(null);
+      setIsFormOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
     <PetList pets ={pets} handleSelect = {handleSelect} handleFormView={handleFormView} isFormOpen={isFormOpen}/>
     <hr/>
-    <PetForm handleAddPet={handleAddPet}/>
-    <PetDetail selected={selected}/>
+    <PetForm selected={selected} handleAddPet={handleAddPet} handleUpdatePet={handleUpdatePet}/>
+    <PetDetail selected={selected} handleDeletePet={handleDeletePet}/>
     </>
   );
 };
