@@ -1,18 +1,31 @@
-const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/pets`;
+const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/pets`
 
-const index = async () =>
-{   try {
-    const res = await fetch(BASE_URL);
-    return res.json();
-    }
-
-    catch(err) {
-        console.log(err);
+const index = async () => {
+    try {
+        const res = await fetch(BASE_URL)
+        return res.json()
+    } catch(err) {
+        console.log(err)
     }
 }
 
-console.log(await index());
+const create = async (formData) => {
+    console.log('create', formData)
+    try {
+        const res = await fetch(BASE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        return await res.json();
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 export {
-    index, 
+    index,
+    create,
 }
