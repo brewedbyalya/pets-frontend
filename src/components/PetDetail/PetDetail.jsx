@@ -16,9 +16,6 @@ return (
     </h2>
 
     <div className="button-container">
-      <button onClick={() => props.handleFormView(props.selected)}>
-        Edit Pet
-      </button>
       <button onClick={() => props.handleDeletePet(props.selected._id)}>
         Delete Pet
       </button>
